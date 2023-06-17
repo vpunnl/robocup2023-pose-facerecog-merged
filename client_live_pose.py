@@ -1,0 +1,55 @@
+import socket
+import cv2
+import numpy as np
+import time
+from custom_socket import CustomSocket
+import json
+
+
+def list_available_cam(max_n):
+    list_cam = []
+    for n in range(max_n):
+        cap = cv2.VideoCapture(n)
+        ret, _ = cap.read()
+
+        if ret:
+            list_cam.append(n)
+        cap.release()
+
+    if len(list_cam) == 1:
+        return list_cam[0]
+    else:
+        print(list_cam)
+        return int(input("Cam index: "))
+
+
+host = socket.gethostname()
+port = 12302
+
+c = CustomSocket(host, port)
+c.clientConnect()
+
+cap = cv2.VideoCapture(list_available_cam(10))
+cap.set(4, 480)
+cap.set(3, 640)
+
+while cap.isOpened():
+
+    ret, frame = cap.read()
+    if not ret:
+        print("Ignoring empty camera frame.")
+        continue
+
+    # cv2.imshow('client_cam', frame)
+    # --- SOCKET ---
+    # result = recv from server, which pose sends out a dict -> res
+    # def req returns json.loads(result)
+    msg = c.req(frame)
+
+    print(msg)
+    print(type(msg))
+    # for ex, { '3' : 'NA' , '4' : 'NA'}
+    if cv2.waitKey(1) == ord("q"):
+        cap.release()
+
+cv2.destroyAllWindows()
