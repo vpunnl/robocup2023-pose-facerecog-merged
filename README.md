@@ -2,4 +2,4 @@
 # Starting server
 main-facerecog.py and main-pose.py
 # Run the client
-client_merged
+client_merged.py
