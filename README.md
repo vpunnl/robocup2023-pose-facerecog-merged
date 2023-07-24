@@ -1,5 +1,5 @@
 # robocup2023-pose-facerecog-merged
-hello hello this is a test message
+<test message delete>
 # Starting server
 main-facerecog.py and main-pose.py
 # Run the client
